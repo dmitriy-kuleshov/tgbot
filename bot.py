@@ -48,7 +48,23 @@ def get_age(message):
             age = int(message.text)  # проверяем, что возраст введен корректно
         except Exception:
             bot.send_message(message.from_user.id, 'Цифрами, пожалуйста')
-    bot.send_message(message.from_user.id, 'Тебе ' + str(age) + ' лет, тебя зовут ' + name + ' ' + surname + '?')
+    keyboard = types.InlineKeyboardMarkup()  # наша клавиатура
+    key_yes = types.InlineKeyboardButton(text='Да', callback_data='yes')  # кнопка «Да»
+    keyboard.add(key_yes)  # добавляем кнопку в клавиатуру
+    key_no = types.InlineKeyboardButton(text='Нет', callback_data='no')
+    keyboard.add(key_no)
+    question = 'Тебе ' + str(age) + ' лет, тебя зовут ' + name + ' ' + surname + '?'
+    bot.send_message(message.from_user.id, text=question, reply_markup=keyboard)
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback_worker(call):
+    if call.data == "yes":
+        bot.send_message(call.message.chat.id, f'Имя твоё запомню я: {name} {surname} - любитель наяривать по выечерам')
+    elif call.data == "no":
+        age = 0  # сброс возраста
+        bot.send_message(call.message.chat.id, 'Давай попробуем еще раз. Сколько тебе лет?')
+        bot.register_next_step_handler(call.message, get_age)
 
 
 bot.polling(none_stop=True, interval=0)
