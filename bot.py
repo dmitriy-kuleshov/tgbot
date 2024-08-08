@@ -1,5 +1,7 @@
 import telebot
 from telebot import types
+import schedule
+import requests
 
 bot = telebot.TeleBot('7187442707:AAE269XiCH13-F72cjWZL-QkZwE5j7IZnps')
 
@@ -68,3 +70,5 @@ def callback_worker(call):
 
 
 bot.polling(none_stop=True, interval=0)
+
+# schedule.every().day.at('15.46').do(start)
