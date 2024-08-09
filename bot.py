@@ -1,5 +1,6 @@
 import telebot
 from telebot import types
+# from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 import schedule
 import requests
 
@@ -19,6 +20,13 @@ name = ''
 surname = ''
 age = 0
 
+keyboard = types.InlineKeyboardMarkup()
+keyboard.add(types.InlineKeyboardButton('Муж.', callback_data='option1'))
+keyboard.add(types.InlineKeyboardButton('Жен.', callback_data='option2'))
+
+
+# bot.send_message(message.from_user.id, 'Пж выбери опцию', reply_markup=keyboard)
+
 
 @bot.message_handler(content_types=['text'])
 def start(message):
@@ -29,9 +37,22 @@ def start(message):
         bot.send_message(message.from_user.id, 'Напиши /reg')
 
 
+@bot.callback_query_handler(func=lambda call: True)
+def callback_for_options(call):
+    if call.data == 'option1':
+        bot.send_message(call.message.chat.id, 'Мужчинский мужчина - уважаю')
+    elif call.data == 'option2':
+        bot.send_message(call.message.chat.id, 'ААААААА женщина')
+
+
 def get_name(message):  # получаем фамилию
     global name
     name = message.text
+    bot.register_next_step_handler(message, get_gender)
+
+
+def get_gender(message):
+    bot.send_message(message.from_user.id, 'Выбери свой пол', reply_markup=keyboard)
     bot.send_message(message.from_user.id, 'Какая у тебя фамилия?')
     bot.register_next_step_handler(message, get_surname)
 
