@@ -1,6 +1,6 @@
 import telebot
 from telebot import types
-
+import psycopg2
 # from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 # import schedule
 # import requests
