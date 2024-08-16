@@ -19,7 +19,7 @@ class RegistrationUser:
         self.gender = ''
 
     def start(self, message):
-        print("Получено сообщение:", message.text)
+        # print("Получено сообщение:", message.text)
         if message.text == '/reg':
             bot.send_message(message.from_user.id, "Как тебя зовут?")
             bot.register_next_step_handler(message, self.get_name)
