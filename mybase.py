@@ -23,15 +23,23 @@ try:
     #     )
     #     print("[INFO] Table created successfully (ZZZ)")
 # вставка данных в БД
-    with connection.cursor() as cursor:
-        cursor.execute(
-            """INSERT INTO botskiy (name) VALUES
-            ('zorobotskiy');"""
-        )
-        print("[INFO] Data was inserted successfully (ZZZ)")
+#     with connection.cursor() as cursor:
+#         cursor.execute(
+#             """INSERT INTO botskiy (name) VALUES
+#             ('zorobotskiy');"""
+#         )
+#
+#         print("[INFO] Data was inserted successfully (ZZZ)")
 # извлечение данных из БД
+#     with connection.cursor() as cursor:
+#         cursor.execute(
+#             """SELECT name FROM botskiy WHERE id = 1;"""
+#         )
+#
+#         print(cursor.fetchone())
+#         print("[INFO] Data was inserted successfully (ZZZ)")
 
-        print(f"Server version: {cursor.fetchone()}")
+
 except Exception as _ex:
     print("[INFO] Error with PostgreSQL(ZZZ)", _ex)
 finally:
