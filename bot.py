@@ -1,12 +1,24 @@
 import telebot
 from telebot import types
 import psycopg2
+import config
+import psycopg2
+from psycopg2 import sql
 
 # from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 # import schedule
 # import requests
 
 bot = telebot.TeleBot('7187442707:AAE269XiCH13-F72cjWZL-QkZwE5j7IZnps')
+
+
+def get_db_connection():
+    return psycopg2.connect(
+        dbname=config.db_name,
+        user=config.user,
+        password=config.password,
+        host=config.host
+    )
 
 
 # schedule.every().day.at('15.46').do(start)
@@ -66,11 +78,28 @@ class RegistrationUser:
 
     def callback_worker(self, call):
         if call.data == "yes":
+            self.save_to_db()
             bot.send_message(call.message.chat.id,
                              f'Имя твоё запомню я: {self.name} {self.surname} - любитель наяривать по вечерам')
         elif call.data == "no":
             bot.send_message(call.message.chat.id, 'Давай попробуем еще раз. Сколько тебе лет?')
             bot.register_next_step_handler(call.message, self.get_age)
+
+    def save_to_db(self):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        try:
+            insert_query = sql.SQL("""
+                INSERT INTO users (name, surname, age, gender)
+                VALUES (%s, %s, %s, %s)
+            """)
+            cursor.execute(insert_query, (self.name, self.surname, self.age, self.gender))
+            conn.commit()
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            cursor.close()
+            conn.close()
 
 
 # Создаем экземпляр класса
