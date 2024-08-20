@@ -30,7 +30,7 @@ class RegistrationUser:
         self.age = 0
         self.gender = ''
 
-    def start(self, message):
+    def start_registration(self, message):
         # print("Получено сообщение:", message.text)
         if message.text == '/reg':
             bot.send_message(message.from_user.id, "Как тебя зовут?")
@@ -40,6 +40,11 @@ class RegistrationUser:
 
     def get_name(self, message):
         self.name = message.text
+        bot.send_message(message.chat.id, 'Какая у тебя фамилия?')
+        bot.register_next_step_handler(message, self.get_surname)
+
+    def get_surname(self, message):
+        self.surname = message.text
         keyboard_gender = types.InlineKeyboardMarkup()
         keyboard_gender.add(types.InlineKeyboardButton('Муж.', callback_data='option1'))
         keyboard_gender.add(types.InlineKeyboardButton('Жен.', callback_data='option2'))
@@ -51,13 +56,8 @@ class RegistrationUser:
         elif call.data == 'option2':
             self.gender = 'Женский'
 
-        bot.send_message(call.message.chat.id, 'Какая у тебя фамилия?')
-        bot.register_next_step_handler(call.message, self.get_surname)
-
-    def get_surname(self, message):
-        self.surname = message.text
-        bot.send_message(message.from_user.id, 'Сколько тебе лет?')
-        bot.register_next_step_handler(message, self.get_age)
+        bot.send_message(call.message.chat.id, 'Сколько тебе лет?')
+        bot.register_next_step_handler(call.message, self.get_age)
 
     def get_age(self, message):
         try:
@@ -109,7 +109,7 @@ user_registration = RegistrationUser()
 # Регистрируем обработчики
 @bot.message_handler(content_types=['text'])
 def handle_text(message):
-    user_registration.start(message)
+    user_registration.start_registration(message)
 
 
 @bot.callback_query_handler(func=lambda call: call.data in ['option1', 'option2'])
