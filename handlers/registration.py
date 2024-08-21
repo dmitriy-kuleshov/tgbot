@@ -25,7 +25,7 @@ class RegistrationUser:
             bot.send_message(message.from_user.id, "Как тебя зовут?")
             bot.register_next_step_handler(message, lambda msg: self.get_name(bot, msg))
         else:
-            bot.send_message(message.from_user.id, 'Напиши /reg')
+            bot.send_message(message.from_user.id, 'Для начала диалога воспользуйтесь кнопкой Меню')
 
     def get_name(self, bot, message):
         self.name = message.text
