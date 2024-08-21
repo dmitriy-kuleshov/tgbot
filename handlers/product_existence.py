@@ -26,6 +26,7 @@ class ProductExistence:
 
     def get_product_name(self, bot, message):
         self.product_name = message.text
+        bot.send_message(message.from_user.id, f'Вы интересуетесь товаром: {self.product_name}')
 
 
 def search_handlers(bot):
@@ -33,6 +34,7 @@ def search_handlers(bot):
 
     @bot.message_handler(content_types=['text'])
     def handle_text(message):
+        print(f"Received message: {message.text}")
         if message.text == '/product':
             product_existence.start_search(bot, message)
         else:
