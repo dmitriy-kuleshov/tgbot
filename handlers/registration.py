@@ -22,14 +22,14 @@ class RegistrationUser:
 
     def start_registration(self, bot, message):
         if message.text == '/reg':
-            bot.send_message(message.from_user.id, "Как тебя зовут?")
+            bot.send_message(message.from_user.id, "Как вас зовут?")
             bot.register_next_step_handler(message, lambda msg: self.get_name(bot, msg))
         else:
             bot.send_message(message.from_user.id, 'Для начала диалога воспользуйтесь кнопкой Меню')
 
     def get_name(self, bot, message):
         self.name = message.text
-        bot.send_message(message.chat.id, 'Какая у тебя фамилия?')
+        bot.send_message(message.chat.id, 'Какая у вас фамилия?')
         bot.register_next_step_handler(message, lambda msg: self.get_surname(bot, msg))
 
     def get_surname(self, bot, message):
@@ -97,7 +97,10 @@ def register_handlers(bot):
 
     @bot.message_handler(content_types=['text'])
     def handle_text(message):
-        user_registration.start_registration(bot, message)
+        if message.text == '/reg':
+            user_registration.start_registration(bot, message)
+        else:
+            pass
 
     @bot.callback_query_handler(func=lambda call: call.data in ['option1', 'option2'])
     def handle_gender_callback(call):

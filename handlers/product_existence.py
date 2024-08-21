@@ -22,7 +22,7 @@ class ProductExistence:
             bot.send_message(message.from_user.id, 'Какой товар вас интересует?')
             bot.register_next_step_handler(message, lambda msg: self.get_product_name(bot, msg))
         else:
-            bot.send_message(message.from_user.id, 'Для начала диалога воспользуйтесь кнопкой Меню')
+            bot.send_message(message.from_user.id, 'Для начала диалога воспользуйтесь кнопкой из "Меню"')
 
     def get_product_name(self, bot, message):
         self.product_name = message.text
@@ -31,6 +31,9 @@ class ProductExistence:
 def search_handlers(bot):
     product_existence = ProductExistence()
 
-    @bot.message_handler(content_types='[text]')
+    @bot.message_handler(content_types=['text'])
     def handle_text(message):
-        product_existence.start_search(bot, message)
+        if message.text == '/product':
+            product_existence.start_search(bot, message)
+        else:
+            pass
