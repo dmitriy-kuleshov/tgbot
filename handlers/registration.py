@@ -40,10 +40,13 @@ class RegistrationUser:
         bot.send_message(message.from_user.id, 'Выбери свой пол', reply_markup=keyboard_gender)
 
     def callback_for_options(self, bot, call):
+        print(f"Callback data received: {call.data}")  # Debug statement
         if call.data == 'option1':
             self.gender = 'Мужской'
         elif call.data == 'option2':
             self.gender = 'Женский'
+        else:
+            print(f"Unexpected callback data: {call.data}")  # Debug statement
 
         bot.send_message(call.message.chat.id, 'Сколько тебе лет?')
         bot.register_next_step_handler(call.message, lambda msg: self.get_age(bot, msg))
@@ -66,6 +69,7 @@ class RegistrationUser:
         bot.send_message(message.from_user.id, text=question, reply_markup=keyboard)
 
     def callback_worker(self, bot, call):
+        print(f"Confirmation callback data received: {call.data}")  # Debug statement
         if call.data == "yes":
             self.save_to_db()
             bot.send_message(call.message.chat.id,
@@ -104,8 +108,10 @@ def register_handlers(bot):
 
     @bot.callback_query_handler(func=lambda call: call.data in ['option1', 'option2'])
     def handle_gender_callback(call):
+        print("Gender callback triggered")  # Debug statement
         user_registration.callback_for_options(bot, call)
 
     @bot.callback_query_handler(func=lambda call: call.data in ['yes', 'no'])
     def handle_confirmation_callback(call):
+        print("Confirmation callback triggered")  # Debug statement
         user_registration.callback_worker(bot, call)
